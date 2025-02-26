@@ -1,10 +1,75 @@
-## 部署步骤
+报错 `<template v-for> key should be placed on the <template> tag`现已修复，感谢提交
+
+# 一键启动
+
+```bash
+npm i
+npm run serve
+```
+
+## 技术栈
+
+技术栈
+
+前端：
+
+- 👉 vue2 + elementUI 
+- ⚙️ markdown-it，axios
+
+后端：
+
+- 🔑 Spring Boot
+- 💡 vs code编辑器自动格式化
+- 🔌MyBatis plus, Shiro, redis
+-  📦hibernate， validatior  ，FastDFS
+
+[前端](https://github.com/yanghub/aiModels-blogs/tree/master)     [后端]()
+
+## 大模型本地部署
+
+使用LM studio运行本地测试，非流式回复测试，测试模型`deepseek-r1-distill-qwen-1.5b`
+
+[📦huggingface模型网📦](https://huggingface.co/models)  后端默认地址http://127.0.0.1:1234
+
+如需在线下载替换源
+
+安装目录搜索
+
+```
+findstr /s /i /m /c:"huggingface.co" *.*
+```
+
+nodepat++替换
+
+```
+把所有的huggingface.co都替换成hf-mirror.com
+```
+
+## 
+
+# 部署步骤
 
 1.启动nginx   -->配置开机启动
 
 vim /usr/local/nginx/conf
 
-nginx.conf配置添加跨域
+## nginx配置
+
+nginx没有启动,则为   Network Error
+
+再通过反向代理配置
+
+```
+location / {
+            root   /usr/local/nginx/dist;
+			proxy_pass http://localhost:8081;   //配置的后端
+            index  index.html index.htm;
+			try_files $uri $uri/ /index.html?s=$uri&$args;
+        }
+        
+```
+
+或者
 
 ```
 location / {
@@ -12,27 +77,42 @@ location / {
             index  index.html index.htm;
 			try_files $uri $uri/ /index.html?s=$uri&$args;
         }
-		location ^~ /equipment {
-            proxy_pass  http://localhost:8081;
-        }
+location ^~ /equipment {
+    proxy_pass hhttp://localhost:8081;
+  }
 ```
 
-重启nginx
+查看运行端口
 
-```handlebars
-ps -ef | grep nginx   //查看nginx线程
-kill -9 端口号（注意，要杀两个端口号）
+```
+ps aux|grep nginx
+```
 
+kill  端口号
+
+1.先停止再启动（推荐）：
+对 nginx 进行重启相当于先停止再启动，即先执行停止命令再执行启动命令。如下：
+
+```
+./nginx -s quit
+./nginx
+```
+
+重新启动
+
+```
 /usr/local/nginx/sbin/nginx -c /usr/local/nginx/conf/nginx.conf
 ```
 
+## win启动
 
+版本Redis-x64-3.2.100   **点击**redis-cli.exe
 
-2.启动redis
+## 启动redis
 
 3.跨域控制层方法必须加  @CrossOrigin
 
-4.部署时  vue  axios前置请求换成  axios.defaults.baseURL="http://120.25.221.253:8081"  
+4.部署时  vue  axios前置请求换成 
 
 5.springboot打包jar包，无需修改启动类（部署tomcat需要）
 
@@ -108,3 +188,4 @@ password: ******
 9.花生壳在centos自启动
 
 10.解决部署保存数据乱码
+

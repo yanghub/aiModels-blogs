@@ -1,0 +1,6 @@
+/**
+全局 样式
+ */
+body.el-scrollbar__wrap {
+    overflow-x: hidden;
+}
